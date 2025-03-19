@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Math Challenge</title>
+    <style>
+        /* Modern Font and Base Styles */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5A52D5;
+            --secondary: #FF6584;
+            --secondary-dark: #E04F6C;
+            --success: #4CAF50;
+            --danger: #FF5252;
+            --warning: #FFC107;
+            --dark: #2D3748;
+            --light: #F7FAFC;
+            --gray: #A0AEC0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F0F4F8;
+            margin: 0;
+            padding: 0;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        /* Header and Navigation */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header-content h1 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 32px;
+            letter-spacing: 1px;
+        }
+        
+        .menu-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .menu-btn:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* Menu Styles */
+        .menu {
+            display: none;
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            overflow: hidden;
+            min-width: 200px;
+        }
+        
+        .menu-button {
+            background-color: white;
+            color: var(--dark);
+            border: none;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            text-align: left;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .menu-button:hover {
+            background-color: #f0f0f0;
+            color: var(--primary);
+        }
+        
+        .menu-content {
+            padding: 10px 0;
+        }
+        
+        /* Credits Modal */
+        .credits {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .credits h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .close-btn {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            float: right;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background-color: var(--secondary-dark);
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* User Info and Score */
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background-color: var(--light);
+            padding: 15px 20px;
+            border-radius: 10px;
+        }
+        
+        .score {
+            color: var(--primary);
+            margin: 0;
+        }
+        
+        /* Game Controls */
+        select {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid var(--gray);
+            background-color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            margin-bottom: 15px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .mode-note {
+            color: var(--gray);
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        
+        /* Question Container */
+        .question-container {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary);
+        }
+        
+        #question {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        input[type="number"] {
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid var(--gray);
+            width: 100%;
+            font-size: 18px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="number"]:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        button#submit-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        button#submit-button:hover:not([disabled]) {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        button#submit-button:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+        }
+        
+        #result {
+            font-size: 18px;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background-color: var(--light);
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--warning);
+        }
+        
+        .info-box h2 {
+            color: var(--dark);
+            margin-top: 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .info-box p {
+            margin: 10px 0;
+        }
+        
+        /* Symbol List */
+        .symbol-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+        }
+        
+        .symbol-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Bugs Section */
+        .strikethrough {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 20px 10px;
+            }
+            
+            .header-content h1 {
+                font-size: 24px;
+            }
+            
+            #question {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-content">
+        <h1>Math Challenge</h1>
+        <button class="menu-btn" id="menu-button">Menu</button>
+    </div>
+</div>
+
+<div class="menu" id="menu">
+    <div class="menu-content">
+        <button class="menu-button" id="credits-link">Credits</button>
+        <button class="menu-button" id="reset-button">Reset</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="user-info">
+        <p id="greeting" class="score"></p>
+        <p id="score-value" class="score" style="font-size: 24px; font-weight: bold;"></p>
+    </div>
+
+    <select id="mode-select">
+        <option value="easy">Easy (1x1 digits)</option>
+        <option value="medium">Medium (2x2 to 2x1 digits)</option>
+        <option value="hard">Hard (3x3 digits)</option>
+        <option value="insane">Insane (5x5 digits)</option>
+    </select>
+    <p id="mode-note" class="mode-note"></p>
+
+    <div class="question-container">
+        <p id="question"></p>
+        <input type="number" id="answer-input" placeholder="Enter your answer" />
+        <button id="submit-button" disabled>Submit</button>
+        <p id="result"></p>
+    </div>
+
+    <div class="info-box">
+        <h2>How to Play:</h2>
+        <p>Choose a difficulty level from the dropdown menu.</p>
+        <p>A math problem will appear. Enter your answer and click "Submit".</p>
+        <p>If correct, you earn a point; if not, 1 point is deducted.</p>
+        <p>Track your score displayed above.</p>
+    </div>
+
+    <div class="info-box">
+        <h2>Game Symbols Used:</h2>
+        <div class="symbol-list">
+            <div class="symbol-item">*: Multiplication</div>
+            <div class="symbol-item">-: Subtraction</div>
+            <div class="symbol-item">/: Division</div>
+            <div class="symbol-item">+: Addition</div>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <h2>Known Bugs (FIXED) :</h2>
+        <p class="strikethrough">The game may not correctly handle negative numbers in subtraction problems.</p>
+        <p>Update Note: When answering subtraction, if you subtract a small number from a larger number, the result will be negative. example: 3 - 7 = -4 Ensure you account for this when entering your answers to avoid mistakes.</p>
+    </div>
+</div>
+
+<div class="credits" id="credits">
+    <button class="close-btn" id="close-credits">X</button>
+    <h2>Credits</h2>
+    <p>This game was designed and developed by<strong> Norwel.</strong></p>
+    <p>Why do plants hate math? A: Because it gives them square roots.</p>
+    <p>
+
+</p>
+</div>
+
+<script>
+    // Toggle menu visibility
+    document.addEventListener('DOMContentLoaded', function() {
+    // Toggle menu visibility
+    document.getElementById("menu-button").addEventListener("click", function() {
+        const menu = document.getElementById("menu");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    });
+
+    // Toggle credits visibility
+    let creditsVisible = false;
+    document.getElementById("credits-link").addEventListener("click", function() {
+        const credits = document.getElementById("credits");
+        credits.style.display = creditsVisible ? "none" : "block";
+        creditsVisible = !creditsVisible;
+    });
+
+    document.getElementById("close-credits").addEventListener("click", function() {
+        document.getElementById("credits").style.display = "none";
+        creditsVisible = false;
+    });
+
+    // Reset button functionality
+    document.getElementById('reset-button').addEventListener('click', function() {
+        if (confirm("Are you sure you want to reset? Your game score will be deleted.")) {
+            localStorage.clear();
+            location.reload(); // Refresh the page
+        }
+    });
+
+    // Initialize variables
+    var operators = ['+', '-', '*'];
+    var numbers = [];
+    var operatorIndex;
+    var mode = localStorage.getItem('mode') || 'easy';
+    var userName = localStorage.getItem('userName');
+    var score = parseInt(localStorage.getItem('score')) || 0;
+
+    // Prompt for user name if not already stored
+    if (!userName) {
+        userName = prompt('What is your name?', '') || 'Player';
+        localStorage.setItem('userName', userName);
+    }
+
+    // Display user name and score
+    document.getElementById('greeting').textContent = 'Welcome, ' + userName + '!';
+    document.getElementById('score-value').textContent = 'Score: ' + score;
+
+    // Handle difficulty level change
+    document.getElementById('mode-select').value = mode;
+    document.getElementById('mode-select').addEventListener('change', function() {
+        mode = this.value;
+        localStorage.setItem('mode', mode);
+        generateQuestion();
+        document.getElementById('mode-note').textContent = getModeNote();
+    });
+
+    function generateQuestion() {
+        numbers = [];
+        if (mode === 'easy') {
+            for (var i = 0; i < 2; i++) {
+                numbers[i] = Math.floor(Math.random() * 10) + 1;
+            }
+        } else if (mode === 'medium') {
+            for (var i = 0; i < 2; i++) {
+                numbers[i] = Math.floor(Math.random() * 100);
+            }
+        } else if (mode === 'hard') {
+            for (var i = 0; i < 2; i++) {
+                numbers[i] = Math.floor(Math.random() * 999) + 100;
+            }
+        } else if (mode === 'insane') {
+            for (var i = 0; i < 2; i++) {
+                numbers[i] = Math.floor(Math.random() * 90000) + 40000;
+            }
+        }
+
+        operatorIndex = Math.floor(Math.random() * operators.length);
+        var question = '';
+        if (mode === 'easy') {
+            question = numbers[0] + ' ' + operators[operatorIndex] + ' ' + numbers[1] + ' = ?';
+        } else if (mode === 'medium') {
+            question = numbers[0] + ' ' + operators[operatorIndex] + ' ' + numbers[1];
+        } else if (mode === 'hard') {
+            question = numbers[0] + ' ' + operators[operatorIndex] + ' ' + numbers[1];
+        } else if (mode === 'insane') {
+            question = numbers[0] + ' ' + operators[operatorIndex] + ' ' + numbers[1];
+        }
+        document.getElementById('question').textContent = question;
+        document.getElementById('answer-input').value = ''; // Reset the answer input
+    }
+
+    generateQuestion();
+
+    document.getElementById('submit-button').addEventListener('click', checkAnswer);
+
+    function checkAnswer() {
+        var userAnswer = parseInt(document.getElementById('answer-input').value);
+        var correctAnswer;
+
+        if (operators[operatorIndex] === '+') {
+            correctAnswer = numbers[0] + numbers[1];
+        } else if (operators[operatorIndex] === '-') {
+            correctAnswer = numbers[0] - numbers[1];
+        } else if (operators[operatorIndex] === '*') {
+            correctAnswer = numbers[0] * numbers[1];
+        } else if (operators[operatorIndex] === '/') {
+            correctAnswer = Math.floor(numbers[0] / numbers[1]);
+        }
+
+        if (userAnswer === correctAnswer) {
+            score++;
+            document.getElementById('result').textContent = 'Correct! ✅';
+        } else {
+            if (score > 0) score--;
+            document.getElementById('result').textContent = 'Incorrect. ❌ The correct answer is ' + correctAnswer;
+        }
+
+        document.getElementById('score-value').textContent = 'Score: ' + score;
+        localStorage.setItem('score', score);
+        generateQuestion();
+    }
+
+    function getModeNote() {
+        switch (mode) {
+            case 'easy': return 'Easy mode: Single-digit numbers with basic operations.';
+            case 'medium': return 'Medium mode: 2-digit numbers with basic operations.';
+            case 'hard': return 'Hard mode: 3-digit numbers with basic operations.';
+            case 'insane': return 'Insane mode: 5-digit numbers with all operations.';
+            default: return '';
+        }
+    }
+
+    document.getElementById('answer-input').addEventListener('input', function() {
+        document.getElementById('submit-button').disabled = !this.value;
+    });
+});
+
+</script>
+
+</body>
+</html>
